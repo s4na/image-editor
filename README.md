@@ -1,115 +1,73 @@
-* 調査を進めるにあたって、 tmp/ にあるリポジトリを見るときは、必ず最初に最新のmain or master ブランチに切り替えて
-* PRのタイトルや説明、README.mdなど、人間に読ませる文章については日本語で書いて。ただし、プログラムのコードなどは日本語で書かないで。コードのコメント文は日本語で書いて。
-* ユーザーに難解な概念や専門用語を説明する時は、IQを落とさず、ステップバイステップで説明して
+# React + TypeScript + Vite
 
-## コミットメッセージはこういう感じで書いて
-例
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-type(scope): 要約（命令形・短く）
 
-User Request:
-- 誰のどの要望に応える変更か
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-Why:
-- なぜ必要か（1–2行）
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-How:
-- 主要な実装ポイント（1–3行）
-
-What:
-- 変更点の列挙（箇条書き）
-```
-
-## PR書く時はこういう感じに書いて
-PRタイトル
-```
-feat(search): 施設検索のレスポンス高速化 — Redisキャッシュレイヤー導入
-fix(batch): バッチ重複実行を抑止 — SolidQueue のロック条件を修正
-refactor(api): 施設APIのクエリ構築処理を共通化（影響なし）
-chore(ci): GitHub Actions の Ruby を 3.3.4 に更新
-perf(db): 施設一覧の N+1 を解消 — includes/preload 追加（P95 -28%）
-revert(auth): JWT検証の厳格化を巻き戻し — 一時的に互換性優先
-security(auth): CSRF対策を強化 — sameSite=strict + token rotation
-docs(arch): キャッシュ設計の ADR を追加（ADR-012）
-```
-PR説明
-```
-# TL;DR
-- このPRの一言要約（ユーザー価値 or リスク低減）。数行で。
-
-## 背景 / Context
-- どんな課題があり、何がトリガーになったか
-- 関連チケット・障害・ユーザーからの苦情・数値劣化の事実
-
-## User Request
-- 明示的な要求（誰が・何を・いつまでに）
-- 暗黙の要求（SLO/SLIや法令/運用制約など）
-
-## Why（目的・理由）
-- 価値仮説 / 選んだ方針の根拠
-- 代替案を2つは列挙し、採用しなかった理由を1行ずつ
-
-## What（変更概要）
-- 主要変更点の箇条書き（ファイル/機能単位）
-- 互換性に関する注意（破壊的変更の有無）
-
-## How（実装の詳細）
-- 設計のキーポイント（アルゴリズム/データ構造/キャッシュ戦略/並行制御）
-- フラグ構成（Feature Flag / Config / 環境変数）
-- DB変更（マイグレーションID / リバーシブルか / バックフィル戦略）
-- 外部依存（新規ライブラリ/サービス）とライセンス注意
-
-## 性能 / キャパシティ
-- 期待効果: P50/P95/P99・RPS・スループット・メモリ・I/O
-- ベンチ結果（前→後/サンプル数/環境）
-- デグレ検知条件（しきい値・ダッシュボードリンク）
-
-## セキュリティ / プライバシー
-- 攻撃面の変化（権限/入力検証/CSRF/CORS/認可）
-- 個人情報/機微データの扱い（保存/マスキング/保持期間）
-
-## 影響範囲 / Impact
-- Affected Systems: 影響するモジュールやサービス
-- Affected Users: エンドユーザー/管理画面/内部バッチ
-- Breaking Changes: API/イベントスキーマ変更があれば明記
-- 互換性マトリクス（旧クライアント/旧API と並行期間）
-
-## 観測性 / モニタリング
-- 追加メトリクス/ログ/トレース（名前・ラベル例）
-- ダッシュボード/アラートの更新（リンク/閾値）
-
-## デプロイ / ロールバック手順
-- デプロイ順序（DB→アプリ→バッチ/ワーカー）
-- マイグレーション（forward/backward 可否・所要時間目安）
-- フラグの切替計画（canary % → 全量 / 失敗時の戻し方）
-- データ修復/再処理手順（必要ならスクリプト名と実行例）
-
-## テスト内容 / 動作確認手順
-- 自動テスト：ユニット/E2E/契約/プロパティ/負荷
-- 手動検証：再現手順・期待結果・スクショ/ログ
-- フェイルケース：意図的な失敗確認（タイムアウト/リトライ/権限）
-
-## レビューポイント
-- 設計判断の妥当性/トレードオフ
-- バグが潜みやすい箇所（境界条件/再入/タイムゾーン/並行）
-- 追加で見てほしい観点（性能/セキュリティ/可読性）
-
-## リスクと緩和策
-- 既知のリスク/未知のリスク仮説
-- 緩和策（監視/リトライ/フォールバック/レート制限）
-
-## 技術的課題と今後の改善
-- 先送りした負債/ToDo
-- 追随が必要なドキュメント/Runbook/ダッシュボード
-
-## 関連PR / チケット / ドキュメント
-- Issue/他リポジトリPR/設計ドキュメント/ADR など
-
-## 変更ファイルの概要（任意）
-- 主要ファイルの要点を3–7行で（長大PRのときのみ）
-
-## 作業日記
-- その日の判断・詰まり・メモ（簡潔に。後からのトレース用）
-
-
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
