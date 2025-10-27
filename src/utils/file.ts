@@ -16,7 +16,8 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
   if (!SUPPORTED_IMAGE_TYPES.includes(file.type)) {
     return {
       valid: false,
-      error: 'サポートされていないファイル形式です。PNG または JPEG ファイルをアップロードしてください。',
+      error:
+        'サポートされていないファイル形式です。PNG または JPEG ファイルをアップロードしてください。',
     };
   }
 
